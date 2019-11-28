@@ -1,12 +1,13 @@
 import socket
 import _thread
 
-host = socket.gethostname()
+host = (socket.gethostbyname_ex(socket.gethostname()))[-1][-1]
 port = 4445
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     s.bind((host, port))
+    print(f"IP: {host}")
 except socket.error:
     print("Bind error")
 
