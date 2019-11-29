@@ -7,7 +7,10 @@ port = 4445
 errores = {40:"NOT FOUND", 50:"KEY NOT FOUND", 60:"ERROR INSERT", 70:"ERROR DISCONNECT", 80:"ERROR DELETE"}
 
 conectado = False
-while True:
+quit = False
+while not quit:
+    if quit:
+        break
     mensaje = input("Mensaje: ")
     if mensaje == "connect":
         try:
@@ -17,7 +20,7 @@ while True:
             print(s.recv(4096).decode("utf-8"))
             conectado = True
         except socket.error:
-            print("Error al conectar")
+            print("ERROR CONNECT")
             continue
         try:
             while conectado:
@@ -39,9 +42,9 @@ while True:
                 if mensaje == "disconnect":
                     s.close()
                     conectado = False
-                elif mensaje == "Quit":
+                elif mensaje == "quit":
                     s.close()
+                    quit = True
                     break
-
         except socket.error:
             print("Error al enviar mensaje")

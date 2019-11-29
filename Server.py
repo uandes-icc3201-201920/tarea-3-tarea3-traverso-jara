@@ -4,6 +4,7 @@ import pickle
 
 host = (socket.gethostbyname_ex(socket.gethostname()))[-1][-1]
 port = 4445
+locks = _thread.allocate_lock()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
@@ -20,7 +21,7 @@ def verificar(mensaje):
     for comando in comandos:
         if comando == mensaje[:len(comando)] and mensaje[-1] == ")":
             return (comando[:-1],mensaje[len(comando):-1])
-    return 0
+    return [0]
 
 def Thread(conn):
     conn.send(bytes("Conectado!","utf-8"))
@@ -36,9 +37,9 @@ def Thread(conn):
             respuesta = datos
         else:
             data = verificar(mensaje)
-            if data == 0:
+            locks.acquire()
+            if data[0] == 0:
                 respuesta = 40
-            #mutex
             elif data[0] == "insert" :
                 if ',' in data[1]:
                     index = data[1].index(',')
@@ -81,8 +82,8 @@ def Thread(conn):
                         respuesta = 80
                 except:
                     respuesta = 50
-            #mutex
-            elif data[0] == "get":
+            locks.release()
+            if data[0] == "get":
                 try:
                     if int(data[1]) in datos:
                         respuesta = datos[int(data[1])]
@@ -109,5 +110,3 @@ while True:
     print(f"Conectado con {addr[0]}:{addr[1]}")
     print("Cliente conectado")
     _thread.start_new_thread(Thread, (conn,))
-
-s.close()
