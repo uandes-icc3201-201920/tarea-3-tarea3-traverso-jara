@@ -1,7 +1,7 @@
 import socket
 import pickle
 
-host = (socket.gethostbyname_ex(socket.gethostname()))[-1][-1]
+host = input("Ingrese ipv4: ")
 port = 4445
 errores = {40:"NOT FOUND", 50:"KEY NOT FOUND", 60:"ERROR INSERT", 70:"ERROR DISCONNECT", 80:"ERROR DELETE"}
 
